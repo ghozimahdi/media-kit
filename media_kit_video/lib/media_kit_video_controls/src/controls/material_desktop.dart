@@ -962,6 +962,9 @@ class MaterialDesktopSeekBarState extends State<MaterialDesktopSeekBar> {
   }
 
   void onPointerMove(PointerMoveEvent e, BoxConstraints constraints) {
+    // A drag can outlive the seek bar: the controls unmount it when they
+    // finish hiding, but the pointer keeps reporting to this state.
+    if (!mounted) return;
     final percent = e.localPosition.dx / constraints.maxWidth;
     setState(() {
       hover = true;
@@ -971,6 +974,7 @@ class MaterialDesktopSeekBarState extends State<MaterialDesktopSeekBar> {
   }
 
   void onPointerDown() {
+    if (!mounted) return;
     widget.onSeekStart?.call();
     setState(() {
       click = true;
@@ -978,6 +982,7 @@ class MaterialDesktopSeekBarState extends State<MaterialDesktopSeekBar> {
   }
 
   void onPointerUp() {
+    if (!mounted) return;
     widget.onSeekEnd?.call();
     setState(() {
       // Explicitly set the position to prevent the slider from jumping.
@@ -988,6 +993,7 @@ class MaterialDesktopSeekBarState extends State<MaterialDesktopSeekBar> {
   }
 
   void onHover(PointerHoverEvent e, BoxConstraints constraints) {
+    if (!mounted) return;
     final percent = e.localPosition.dx / constraints.maxWidth;
     setState(() {
       hover = true;
@@ -996,6 +1002,7 @@ class MaterialDesktopSeekBarState extends State<MaterialDesktopSeekBar> {
   }
 
   void onEnter(PointerEnterEvent e, BoxConstraints constraints) {
+    if (!mounted) return;
     final percent = e.localPosition.dx / constraints.maxWidth;
     setState(() {
       hover = true;
@@ -1004,6 +1011,7 @@ class MaterialDesktopSeekBarState extends State<MaterialDesktopSeekBar> {
   }
 
   void onExit(PointerExitEvent e, BoxConstraints constraints) {
+    if (!mounted) return;
     setState(() {
       hover = false;
       slider = 0.0;
